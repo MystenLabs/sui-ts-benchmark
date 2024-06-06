@@ -33,8 +33,10 @@ COPY --chown=node:node --from=builder /app/.output ./
 # should be set to ensure performance and security optimizations are applied
 ENV NODE_ENV production
 ENV PORT 3000
+ENV PROMETHEUS_PORT 9184
 
 EXPOSE ${PORT}
+EXPOSE ${PROMETHEUS_PORT}
 
 USER node
 CMD ["dumb-init", "node", "server/index.mjs"]

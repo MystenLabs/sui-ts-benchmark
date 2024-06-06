@@ -1,6 +1,7 @@
 import { executeTransaction } from '~~/utils/executor';
+import { defineLoggedTask } from '~~/utils/logger';
 
-export default defineTask({
+export default defineLoggedTask({
 	meta: {
 		name: 'execute:simple-transfer',
 		description: 'Executes a simple transfer transaction',
@@ -18,4 +19,7 @@ export default defineTask({
 			},
 		};
 	},
+	logResult: (result) => ({
+		digest: result.digest,
+	}),
 });

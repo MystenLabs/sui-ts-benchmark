@@ -47,10 +47,7 @@ export function executeTransaction(
 		});
 
 		return metrics.measureExecution(`execute:${name}`, async () => {
-			console.log('Executing transaction', name);
-			const result = await serialExecutor.executeTransaction(transaction);
-			console.log('done', name);
-			return result;
+			return serialExecutor.executeTransaction(transaction);
 		});
 	});
 }

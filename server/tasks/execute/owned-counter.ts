@@ -1,7 +1,8 @@
 import { COUNTER_PACKAGE_ID, OWNED_COUNTER_ID } from '~~/utils/constants';
 import { executeTransaction, suiClient } from '~~/utils/executor';
+import { defineLoggedTask } from '~~/utils/logger';
 
-export default defineTask({
+export default defineLoggedTask({
 	meta: {
 		name: 'execute:owned-counter',
 		description: 'Executes a transaction to increment an owned counter',
@@ -31,4 +32,7 @@ export default defineTask({
 			},
 		};
 	},
+	logResult: (result) => ({
+		digest: result.digest,
+	}),
 });

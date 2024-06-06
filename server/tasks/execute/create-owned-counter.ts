@@ -1,12 +1,14 @@
 import { bcs } from '@mysten/sui/bcs';
 import { COUNTER_PACKAGE_ID } from '~~/utils/constants';
 import { executeTransaction } from '~~/utils/executor';
+import { defineLoggedTask } from '~~/utils/logger';
 
-export default defineTask({
+export default defineLoggedTask({
 	meta: {
 		name: 'execute:create-owned-counter',
 		description: 'Creates an owned counter object',
 	},
+
 	async run() {
 		const { digest, effects } = await executeTransaction('create-owned-counter', (tx, sender) => {
 			tx.moveCall({
@@ -36,4 +38,7 @@ export default defineTask({
 			},
 		};
 	},
+	logResult: (result) => ({
+		digest: result.digest,
+	}),
 });

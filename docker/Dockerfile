@@ -29,6 +29,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 WORKDIR /app
 
 COPY --chown=node:node --from=builder /app/.output ./
+RUN mkdir /app/logs && chown -R node:node /app/logs
 
 # should be set to ensure performance and security optimizations are applied
 ENV NODE_ENV production

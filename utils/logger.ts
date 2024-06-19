@@ -6,7 +6,25 @@ import { mkdirSync } from 'fs';
 const logDir = resolve(process.cwd(), 'logs');
 mkdirSync(logDir, { recursive: true });
 
-export const logger = pino(pino.destination(join(logDir, 'server.log')));
+const transport = pino.transport({
+	targets: [
+		{
+			level: 'trace',
+			target: 'pino/file',
+			options: {
+				destination: join(logDir, 'server.log'),
+			},
+		},
+		{
+			level: 'trace',
+			target: 'pino/file',
+			options: {
+				destination: 1,
+			},
+		},
+	],
+});
+export const logger = pino(transport);
 
 export function defineLoggedTask<T>(
 	task: Task<T> & {

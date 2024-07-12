@@ -11,7 +11,7 @@
     "prettier": "^3.3.0"
   },
   "dependencies": {
-    "@mysten/sui": "^1.0.5",
+    "@mysten/sui": "^1.2.1",
     "@opentelemetry/api": "^1.8.0",
     "@opentelemetry/exporter-prometheus": "^0.51.1",
     "@opentelemetry/sdk-metrics": "^1.24.1",

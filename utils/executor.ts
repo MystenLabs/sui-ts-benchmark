@@ -40,6 +40,7 @@ export function executeTransaction(
 			const tx = new Transaction();
 			tx.setSenderIfNotSet(keypair.toSuiAddress());
 			tx.setGasPrice(await getGasPrice());
+			tx.setGasBudget(50_000_000n);
 
 			await defineTransaction(tx, keypair);
 

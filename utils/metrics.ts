@@ -73,15 +73,14 @@ export class Instrumentation {
 		try {
 			const result = await callback();
 			success_counter.add(1);
-			return result;
-		} catch (e) {
-			error_counter.add(1);
-			throw e;
-		} finally {
 			const end = process.hrtime.bigint();
 			const duration = Number(end - start) / 1e6;
 			histogram.record(duration);
 			this.setGauge(`${name}:duration`, duration);
+			return result;
+		} catch (e) {
+			error_counter.add(1);
+			throw e;
 		}
 	}
 }

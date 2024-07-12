@@ -81,6 +81,7 @@ export class Instrumentation {
 			const end = process.hrtime.bigint();
 			const duration = Number(end - start) / 1e6;
 			histogram.record(duration);
+			this.setGauge(`${name}:duration`, duration);
 		}
 	}
 }

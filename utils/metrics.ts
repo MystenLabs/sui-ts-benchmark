@@ -67,6 +67,10 @@ export class Instrumentation {
 		const success_counter = this.getCounter(`${name}:success`);
 		const error_counter = this.getCounter(`${name}:errors`);
 		const histogram = this.getHistogram(`${name}:duration`);
+		// force counters to initialize if they haven't
+		counter.add(0);
+		success_counter.add(0);
+		error_counter.add(0);
 
 		const start = process.hrtime.bigint();
 		counter.add(1);

@@ -10,12 +10,14 @@ FROM node:18.17.1-bookworm-slim@sha256:e5c8c319295f6cbc288e19506a9ac37afa3b330f4
 
 WORKDIR /app
 
-RUN apt -qq update && apt -qq upgrade -y && apt -qq install -y npm && npm install -g typescript
+RUN apt -qq update && apt -qq upgrade -y && apt -qq install -y wget
+RUN npm install -g pnpm 
+RUN SHELL="bash" pnpm setup && . ~/.bashrc
 
 COPY --chown=node:node . /app
 
-RUN npm ci 
-RUN npm run build
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
 # same hash as above, but using a separate container to avoid copying our 
 # full build context

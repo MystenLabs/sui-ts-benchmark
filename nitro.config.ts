@@ -13,7 +13,6 @@ export default defineNitroConfig({
 		// Run `cms:update` task every minute
 		'* * * * *': [
 			'execute:simple-transfer',
-			'execute:owned-counter',
 			'execute:shared-counter',
 			'report:balance',
 		],

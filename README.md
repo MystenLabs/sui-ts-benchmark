@@ -21,7 +21,7 @@ Look at the [nitro quick start](https://nitro.unjs.io/guide#quick-start) to lear
 - counter:
   - mainnet:
     - package: `0x1465e2a9dc8a5d5b406c3c2d931d84b0d3195e574bec76fb72a9da9b53860049`
-    - shared counter: `0x200c7499bed8f122a187c74d9cccddfb26ee787d23ca19e1370dfb2492016134`
+    - shared counter: `0x61b3fd17844ce4fdf6ce3db9eaa14de92326ed8f07a8a0de19a129f87daf6e6a`
     - owned counter: `0x86dd3aed21acb9e124db1971e8ec386a86375b6554eeeb7da94340a21fd53e6b`
   - testnet:
     - package `0x7190cfaecbe30eea5afd180c426b4a14f5ca5a333cc96a12aecc86eb2d508f7e`

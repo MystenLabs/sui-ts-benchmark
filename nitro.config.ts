@@ -11,10 +11,8 @@ export default defineNitroConfig({
 	},
 	scheduledTasks: {
 		// Run `cms:update` task every minute
-		'* * * * *': [
-			'execute:simple-transfer',
-			'execute:shared-counter',
-			'report:balance',
-		],
+		'* * * * *': ['execute:simple-transfer', 'execute:shared-counter', 'report:balance'],
+		// Smash coins every hour
+		'0 * * * *': ['execute:smash-coins'],
 	},
 });

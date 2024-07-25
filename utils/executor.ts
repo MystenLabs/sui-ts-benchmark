@@ -29,7 +29,7 @@ async function getGasPrice() {
 	return gasPrice;
 }
 
-const queue = new SerialQueue();
+export const queue = new SerialQueue();
 
 export function executeTransaction(
 	name: string,

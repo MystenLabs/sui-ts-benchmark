@@ -49,6 +49,8 @@ export default defineLoggedTask({
 				gasCoin = effects.gasObject.reference;
 			}
 
+			await serialExecutor.resetCache();
+
 			return { digest };
 		});
 

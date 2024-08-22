@@ -1,4 +1,4 @@
-import { SuiClient, getFullnodeUrl } from '@mysten/sui/client';
+import { SuiClient, getFullnodeUrl, SuiHTTPTransport } from '@mysten/sui/client';
 import { SerialTransactionExecutor, Transaction } from '@mysten/sui/transactions';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { Secp256k1Keypair } from '@mysten/sui/keypairs/secp256k1';
@@ -6,9 +6,35 @@ import { Secp256r1Keypair } from '@mysten/sui/keypairs/secp256r1';
 import { Keypair, decodeSuiPrivateKey } from '@mysten/sui/cryptography';
 import { metrics } from './metrics';
 import { SerialQueue } from './queue';
+import { logger } from './logger';
+
+const transport = new SuiHTTPTransport({
+    fetch: (input, init) => {
+		// try to parse init as json
+		let method = '<unknown>';
+		if (init && init.body) {
+			try {
+				const body = JSON.parse(init.body);
+				method = body.method;
+			} catch (e) {
+				// ignore
+			}
+		}
+
+		return fetch(input, init)
+			.then((response) => {
+				let serverTiming = response.headers.get('server-timing');
+				if (serverTiming) {
+					logger.info(`[${method} Server-Timing: ${serverTiming}`);
+				}
+				return response;
+			});
+	},
+	url: process.env.SUI_JSON_RPC_URL ?? getFullnodeUrl('testnet'),
+});
 
 export const suiClient = new SuiClient({
-	url: process.env.SUI_JSON_RPC_URL ?? getFullnodeUrl('testnet'),
+	transport
 });
 
 const TEST_PRIVATE_KEY = 'suiprivkey1qqrwqg3h2t0y4d3umhw6tk6v423vs2j7qt6kmuwcga3093dcy80q5x6l9st';

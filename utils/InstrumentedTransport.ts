@@ -5,7 +5,7 @@ import {
 	SuiTransportRequestOptions,
 	SuiTransportSubscribeOptions,
 } from '@mysten/sui/client';
-import { request } from 'node:http';
+import { request } from 'node:https';
 import { parse as parseServerTiming } from 'server-timify';
 import { Instrumentation } from './metrics';
 import { logger } from './logger';

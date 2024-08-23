@@ -5,9 +5,15 @@ import {
 	SuiTransportRequestOptions,
 	SuiTransportSubscribeOptions,
 } from '@mysten/sui/client';
-import { request } from 'node:https';
+import { request } from 'node:http';
 import { parse as parseServerTiming } from 'server-timify';
 import { Instrumentation } from './metrics';
+import { logger } from './logger';
+
+const elapsedSeconds = (start: [number, number]) => {
+	const [seconds, nanoseconds] = process.hrtime(start);
+	return seconds + nanoseconds / 1e9;
+}
 
 export class InstrumentedTransport implements SuiTransport {
 	#requestId = 1;
@@ -23,7 +29,7 @@ export class InstrumentedTransport implements SuiTransport {
 		this.#requestId += 1;
 
 		return new Promise((resolve, reject) => {
-			const start = Date.now();
+			const start = process.hrtime();
 			const timings: { [key: string]: number } = {};
 
 			const req = request(
@@ -42,6 +48,8 @@ export class InstrumentedTransport implements SuiTransport {
 							? serverTiming.map((header) => parseServerTiming(header)).flat()
 							: parseServerTiming(serverTiming);
 
+						logger.info({ method: input.method, serverTimings: timings });
+
 						timings.forEach((timing) => {
 							this.#metrics.setGauge(`${timing.name}:${input.method}`, timing.duration ?? 0);
 						});
@@ -50,7 +58,7 @@ export class InstrumentedTransport implements SuiTransport {
 					const response = [];
 
 					res.once('readable', () => {
-						timings.firstByte = Date.now();
+						timings.firstByte = elapsedSeconds(start);
 					});
 
 					res.on('data', (chunk) => {
@@ -58,7 +66,7 @@ export class InstrumentedTransport implements SuiTransport {
 					});
 
 					res.on('end', () => {
-						timings.duration = Date.now();
+						timings.duration = elapsedSeconds(start);
 						if (res.statusCode > 299) {
 							reject(
 								new SuiHTTPStatusError(
@@ -77,6 +85,7 @@ export class InstrumentedTransport implements SuiTransport {
 							return;
 						}
 
+						logger.info({ method: input.method, clientTimings: timings });
 						Object.entries(timings).forEach(([key, value]) => {
 							this.#metrics.setGauge(`${input.method}:${key}`, value);
 						});
@@ -104,15 +113,15 @@ export class InstrumentedTransport implements SuiTransport {
 			);
 
 			req.on('socket', (socket) => {
-				timings.socketConnected = Date.now();
+				timings.socketConnected = elapsedSeconds(start);
 				socket.on('lookup', () => {
-					timings.dnsLookup = Date.now();
+					timings.dnsLookup = elapsedSeconds(start);
 				});
 				socket.on('connect', () => {
-					timings.tcpConnect = Date.now();
+					timings.tcpConnect = elapsedSeconds(start);
 				});
 				socket.on('secureConnect', () => {
-					timings.tlsConnect = Date.now();
+					timings.tlsConnect = elapsedSeconds(start);
 				});
 			});
 		});

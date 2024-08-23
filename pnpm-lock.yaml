@@ -23,6 +23,9 @@ importers:
       pino:
         specifier: ^9.1.0
         version: 9.1.0
+      server-timify:
+        specifier: ^1.0.1
+        version: 1.0.1
     devDependencies:
       nitropack:
         specifier: latest
@@ -1713,6 +1716,10 @@ packages:
   serve-static@1.15.0:
     resolution: {integrity: sha512-XGuRDNjXUijsUL0vl6nSD7cwURuzEgglbOaFuZM9g3kwDXOWVTck0jLzjPzGD+TazWbboZYu52/9/XPdUgne9g==}
     engines: {node: '>= 0.8.0'}
+
+  server-timify@1.0.1:
+    resolution: {integrity: sha512-bAgpk6J4DMlwL+Ww5PqA3II/k+stEiANQRFy9aI4cIuP5EAWJSo5Fi9Q7Rd75F1VqMO9e7e6HPkbshyRlo9Ctg==}
+    engines: {node: '>=12.0'}
 
   set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
@@ -3711,6 +3718,8 @@ snapshots:
       send: 0.18.0
     transitivePeerDependencies:
       - supports-color
+
+  server-timify@1.0.1: {}
 
   set-blocking@2.0.0: {}
 

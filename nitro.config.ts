@@ -10,8 +10,10 @@ export default defineNitroConfig({
 		tasks: true,
 	},
 	scheduledTasks: {
-		// Run `cms:update` task every minute
-		'* * * * *': ['execute:simple-transfer', 'execute:shared-counter', 'report:balance'],
+		// Run simple transfter every minute
+		'* * * * *': ['execute:simple-transfer', 'report:balance'],
+		// Run shared-counter every minute, but offset by 30 seconds so that the logs are not comingled.
+		'30 * * * * *': ['execute:shared-counter'],
 		// Run `report:ping` task every 10 seconds
 		'*/10 * * * * *': ['report:ping'],
 		// Smash coins every hour

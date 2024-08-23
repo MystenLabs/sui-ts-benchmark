@@ -5,9 +5,11 @@ import {
 	SuiTransportRequestOptions,
 	SuiTransportSubscribeOptions,
 } from '@mysten/sui/client';
-import { request } from 'node:https';
+import { request as httpRequest } from 'node:https';
+import { request as httpsRequest } from 'node:https';
 import { parse as parseServerTiming } from 'server-timify';
 import { Instrumentation } from './metrics';
+import { logger } from './logger';
 
 export class InstrumentedTransport implements SuiTransport {
 	#requestId = 1;
@@ -26,7 +28,7 @@ export class InstrumentedTransport implements SuiTransport {
 			const start = Date.now();
 			const timings: { [key: string]: number } = {};
 
-			const req = request(
+			const req = (this.#url.startsWith('https://') ? httpsRequest : httpRequest)(
 				this.#url,
 				{
 					method: 'POST',
@@ -38,6 +40,7 @@ export class InstrumentedTransport implements SuiTransport {
 					const serverTiming = res.headers['server-timing'];
 
 					if (serverTiming) {
+						logger.info(`[${input.method} Server-Timing: ${serverTiming}`);
 						const timings = Array.isArray(serverTiming)
 							? serverTiming.map((header) => parseServerTiming(header)).flat()
 							: parseServerTiming(serverTiming);

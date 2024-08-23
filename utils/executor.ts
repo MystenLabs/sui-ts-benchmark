@@ -21,11 +21,13 @@ const transport = new SuiHTTPTransport({
 			}
 		}
 
+		let clientStart = process.hrtime();
 		return fetch(input, init)
 			.then((response) => {
+				let clientDuration = process.hrtime(clientStart);
 				let serverTiming = response.headers.get('server-timing');
 				if (serverTiming) {
-					logger.info(`[${method} Server-Timing: ${serverTiming}`);
+					logger.info(`[${method} client time: ${clientDuration} Server-Timing: ${serverTiming}`);
 				}
 				return response;
 			});

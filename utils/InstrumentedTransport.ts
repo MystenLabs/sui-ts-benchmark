@@ -46,7 +46,9 @@ export class InstrumentedTransport implements SuiTransport {
 							: parseServerTiming(serverTiming);
 
 						timings.forEach((timing) => {
-							this.#metrics.setGauge(`${timing.name}:${input.method}`, timing.duration ?? 0);
+							this.#metrics
+								.getHistogram(`${timing.name}:${input.method}`)
+								.record(timing.duration ?? 0);
 						});
 					}
 
@@ -81,7 +83,7 @@ export class InstrumentedTransport implements SuiTransport {
 						}
 
 						Object.entries(timings).forEach(([key, value]) => {
-							this.#metrics.setGauge(`${input.method}:${key}`, value);
+							this.#metrics.getHistogram(`${input.method}:${key}`).record(value);
 						});
 
 						resolve(data.result);

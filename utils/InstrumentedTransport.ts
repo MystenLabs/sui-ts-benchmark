@@ -83,7 +83,7 @@ export class InstrumentedTransport implements SuiTransport {
 						}
 
 						Object.entries(timings).forEach(([key, value]) => {
-							this.#metrics.getHistogram(`${input.method}:${key}`).record(value);
+							this.#metrics.getHistogram(`${input.method}:${key}`).record(value - start);
 						});
 
 						resolve(data.result);

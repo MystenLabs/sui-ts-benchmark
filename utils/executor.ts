@@ -7,34 +7,15 @@ import { Keypair, decodeSuiPrivateKey } from '@mysten/sui/cryptography';
 import { metrics } from './metrics';
 import { SerialQueue } from './queue';
 import { logger } from './logger';
+import { InstrumentedTransport } from './InstrumentedTransport';
 
-const transport = new SuiHTTPTransport({
-    fetch: (input, init) => {
-		// try to parse init as json
-		let method = '<unknown>';
-		if (init && init.body) {
-			try {
-				const body = JSON.parse(init.body);
-				method = body.method;
-			} catch (e) {
-				// ignore
-			}
-		}
-
-		return fetch(input, init)
-			.then((response) => {
-				let serverTiming = response.headers.get('server-timing');
-				if (serverTiming) {
-					logger.info(`[${method} Server-Timing: ${serverTiming}`);
-				}
-				return response;
-			});
-	},
+const transport = new InstrumentedTransport({
 	url: process.env.SUI_JSON_RPC_URL ?? getFullnodeUrl('testnet'),
+	metrics,
 });
 
 export const suiClient = new SuiClient({
-	transport
+	transport,
 });
 
 const TEST_PRIVATE_KEY = 'suiprivkey1qqrwqg3h2t0y4d3umhw6tk6v423vs2j7qt6kmuwcga3093dcy80q5x6l9st';

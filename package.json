@@ -15,6 +15,7 @@
     "@opentelemetry/api": "^1.8.0",
     "@opentelemetry/exporter-prometheus": "^0.51.1",
     "@opentelemetry/sdk-metrics": "^1.24.1",
-    "pino": "^9.1.0"
+    "pino": "^9.1.0",
+    "server-timify": "^1.0.1"
   }
 }

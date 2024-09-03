@@ -1,11 +1,42 @@
-# Nitro starter
+# Sui TS benchmark
 
-Look at the [nitro quick start](https://nitro.unjs.io/guide#quick-start) to learn more how to get started.
+This repo contains a Sui end-to-end performance benchmark. To run (on testnet):
 
-## Routes
+Get gas if necessary:
 
-- `/api/balance`: Reports the current address and balance
-- `/api/execute/simple-transfer`: Executes a transaction that sends 1 MIST to the sender
+     $ sui client faucet
+
+Export private key:
+
+     $ sui client addresses
+     ╭──────────────┬────────────────────────────────────────────────────────────────────┬────────────────╮
+     │ alias        │ address                                                            │ active address │
+     ├──────────────┼────────────────────────────────────────────────────────────────────┼────────────────┤
+     │ upbeat-topaz │ 0x69755d85baca525a6b555f060c9255ebcef0fc73c348bb0cf579ad63062f0fd2 │ *              │
+     ╰──────────────┴────────────────────────────────────────────────────────────────────┴────────────────╯
+
+
+     $ sui keytool export --key-identity upbeat-topaz
+     ╭────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────╮
+     │ exportedPrivateKey │  suiprivkeyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                    │
+     │ key                │ ╭─────────────────┬──────────────────────────────────────────────────────────────────────╮ │
+     │                    │ │ alias           │                                                                      │ │
+     │                    │ │ suiAddress      │  0x69755d85baca525a6b555f060c9255ebcef0fc73c348bb0cf579ad63062f0fd2  │ │
+     │                    │ │ publicBase64Key │  ACO3AH1wskshimCIrGc2pdudrQJs0ytlNWnUqUicKPrU                        │ │
+     │                    │ │ keyScheme       │  ed25519                                                             │ │
+     │                    │ │ flag            │  0                                                                   │ │
+     │                    │ │ peerId          │  23b7007d70b24b218a6088ac6736a5db9dad026cd32b653569d4a9489c28fad4    │ │
+     │                    │ ╰─────────────────┴──────────────────────────────────────────────────────────────────────╯ │
+     ╰────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────╯
+
+Build and run server:
+
+     $ pnpm install
+     $ pnpm run build
+     $ SUI_JSON_RPC_URL=https://benchmark-rpc.sui-testnet.mystenlabs.com:443  SUI_PRIVATE_KEY=suiprivkeyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx pnpm run preview
+
+Instructions for running on mainnet are identical, except you will need to fund the account yourself instead of using faucet,
+and you should use `SUI_JSON_RPC_URL=https://benchmark-rpc.sui-mainnet.mystenlabs.com:443`
 
 ## Variables
 
@@ -15,15 +46,3 @@ Look at the [nitro quick start](https://nitro.unjs.io/guide#quick-start) to lear
 - `COUNTER_PACKAGE_ID` sets the ID of the counter package. See Packages section below
 - `SHARED_COUNTER_ID` set the ID of the shared counter object to increment
 - `OWNED_COUNTER_ID` set the ID of the owned counter object to increment
-
-## Packages:
-
-- counter:
-  - mainnet:
-    - package: `0x1465e2a9dc8a5d5b406c3c2d931d84b0d3195e574bec76fb72a9da9b53860049`
-    - shared counter: `0x61b3fd17844ce4fdf6ce3db9eaa14de92326ed8f07a8a0de19a129f87daf6e6a`
-    - owned counter: `0x86dd3aed21acb9e124db1971e8ec386a86375b6554eeeb7da94340a21fd53e6b`
-  - testnet:
-    - package `0x7190cfaecbe30eea5afd180c426b4a14f5ca5a333cc96a12aecc86eb2d508f7e`
-    - shared counter: `0xaf7a0a1346420a575015429cc4289a1d55faf37d93fa69bb07a1619b3be5665c`
-    - owned counter: `0xe6f57449a3425927009a5a29044d6333053fb3f0b9c82b8d73777c72f2b33827`

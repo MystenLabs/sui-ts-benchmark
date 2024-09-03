@@ -11,8 +11,7 @@ export const suiClient = new SuiClient({
 	url: process.env.SUI_JSON_RPC_URL ?? getFullnodeUrl('testnet'),
 });
 
-const TEST_PRIVATE_KEY = 'suiprivkey1qqrwqg3h2t0y4d3umhw6tk6v423vs2j7qt6kmuwcga3093dcy80q5x6l9st';
-export const keypair = fromExportedKeypair(process.env.SUI_PRIVATE_KEY ?? TEST_PRIVATE_KEY);
+export const keypair = fromExportedKeypair(process.env.SUI_PRIVATE_KEY);
 
 export const serialExecutor = new SerialTransactionExecutor({
 	client: suiClient,

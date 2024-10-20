@@ -4,14 +4,15 @@
     "build": "nitro build",
     "dev": "nitro dev",
     "prepare": "nitro prepare",
-    "preview": "node .output/server/index.mjs"
+    "preview": "node .output/server/index.mjs",
+    "postinstall": "cd node_modules/@mysten/sui && pnpm install --no-frozen-lockfile"
   },
   "devDependencies": {
     "nitropack": "latest",
     "prettier": "^3.3.0"
   },
   "dependencies": {
-    "@mysten/sui": "github:johnjmartin/sui#sui-edge-proxy",
+    "@mysten/sui": "github:johnjmartin/sui#539bced1a14feb58daaab1bde0daf886a4ddcebb",
     "@opentelemetry/api": "^1.8.0",
     "@opentelemetry/exporter-prometheus": "^0.51.1",
     "@opentelemetry/sdk-metrics": "^1.24.1",

@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@mysten/sui':
-        specifier: github:johnjmartin/sui#sui-edge-proxy
+        specifier: github:johnjmartin/sui#539bced1a14feb58daaab1bde0daf886a4ddcebb
         version: sui-monorepo@https://codeload.github.com/johnjmartin/sui/tar.gz/539bced1a14feb58daaab1bde0daf886a4ddcebb
       '@opentelemetry/api':
         specifier: ^1.8.0

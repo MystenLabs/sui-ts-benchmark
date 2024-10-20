@@ -1,5 +1,5 @@
 # this dockerfile was created based on a template that implements the
-# security practices outlined in 
+# security practices outlined in
 # https://cheatsheetseries.owasp.org/cheatsheets/NodeJS_Docker_Cheat_Sheet.html#nodejs-docker-cheat-sheet
 
 # we use node as the base image, pinned to a specific hash for reproducibility
@@ -10,19 +10,32 @@ FROM node:18.17.1-bookworm-slim@sha256:e5c8c319295f6cbc288e19506a9ac37afa3b330f4
 
 WORKDIR /app
 
-RUN apt -qq update && apt -qq upgrade -y && apt -qq install -y wget
-RUN npm install -g pnpm 
+RUN apt -qq update && apt -qq upgrade -y && apt -qq install -y wget git
+RUN npm install -g pnpm
 RUN SHELL="bash" pnpm setup && . ~/.bashrc
 
+# Clone your forked Sui repository and checkout the specific branch
+RUN git clone --branch sui-edge-proxy https://github.com/johnjmartin/sui.git /tmp/sui
+# Navigate to the TypeScript SDK directory
+WORKDIR /tmp/sui/sdk/typescript
+# Install dependencies and build the SDK
+RUN pnpm install
+RUN pnpm build
+# Package the SDK into a tarball
+RUN pnpm pack
+# Copy the tarball to your project directory
+RUN cp mysten-sui-*.tgz /app/mysten_sui.tgz
+
+WORKDIR /app
 COPY --chown=node:node . /app
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 RUN pnpm run build
 
-# same hash as above, but using a separate container to avoid copying our 
+# same hash as above, but using a separate container to avoid copying our
 # full build context
 # --> runtime image
-FROM node:18.17.1-bookworm-slim@sha256:e5c8c319295f6cbc288e19506a9ac37afa3b330f4e38afb01d1269b579cf6a5b 
+FROM node:18.17.1-bookworm-slim@sha256:e5c8c319295f6cbc288e19506a9ac37afa3b330f4e38afb01d1269b579cf6a5b
 RUN apt -qq update && apt install -y wget
 # dumb-init serves as the init process, since node is not intended as one
 # https://engineeringblog.yelp.com/2016/01/dumb-init-an-init-for-docker.html

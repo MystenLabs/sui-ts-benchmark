@@ -47,7 +47,12 @@ export function executeTransaction(
 		});
 
 		return metrics.measureExecution(`execute:${name}`, async () => {
-			return serialExecutor.executeTransaction(transaction);
+			try {
+				return serialExecutor.executeTransaction(transaction);
+			} catch (error) {
+				gasPrice = null;
+				throw error;
+			}
 		});
 	});
 }

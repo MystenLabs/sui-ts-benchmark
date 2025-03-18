@@ -49,7 +49,7 @@ export function executeTransaction(
 
 		return metrics.measureExecution(`execute:${name}`, async () => {
 			try {
-				return serialExecutor.executeTransaction(transaction);
+				return await serialExecutor.executeTransaction(transaction);
 			} catch (error) {
 				console.log("error, clearing gasPrice");
 				gasPrice = null;

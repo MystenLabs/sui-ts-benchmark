@@ -23,6 +23,7 @@ let gasPrice: bigint | null = null;
 async function getGasPrice() {
 	if (!gasPrice) {
 		gasPrice = await suiClient.getReferenceGasPrice();
+		console.log("fetched gasPrice", gasPrice);
 	}
 
 	return gasPrice;
@@ -48,8 +49,9 @@ export function executeTransaction(
 
 		return metrics.measureExecution(`execute:${name}`, async () => {
 			try {
-				return serialExecutor.executeTransaction(transaction);
+				return await serialExecutor.executeTransaction(transaction);
 			} catch (error) {
+				console.log("error, clearing gasPrice");
 				gasPrice = null;
 				throw error;
 			}

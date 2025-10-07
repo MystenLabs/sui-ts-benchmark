@@ -6,8 +6,14 @@ import {
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 import { Counter, Histogram, Meter } from '@opentelemetry/api';
 
-const TXN_HISTOGRAM_BUCKETS = [0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1250, 1500, 1750, 2000, 3000, 5000, 10000];
-const PING_HISTOGRAM_BUCKETS = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 110, 120, 130, 140, 150, 175, 200, 250, 300, 400, 500];
+const TXN_HISTOGRAM_BUCKETS = [
+	0, 25, 50, 75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475,
+	500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1250, 1500, 1750, 2000, 3000, 5000, 10000,
+];
+const PING_HISTOGRAM_BUCKETS = [
+	0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 110, 120, 130,
+	140, 150, 175, 200, 250, 300, 400, 500,
+];
 
 export class Instrumentation {
 	meter: Meter;
@@ -59,9 +65,12 @@ export class Instrumentation {
 
 	getHistogram(name: string, buckets: number[]) {
 		if (!this.#histograms.has(name)) {
-			this.#histograms.set(name, this.meter.createHistogram(name, {
-				advice: { explicitBucketBoundaries: buckets },
-			}));
+			this.#histograms.set(
+				name,
+				this.meter.createHistogram(name, {
+					advice: { explicitBucketBoundaries: buckets },
+				}),
+			);
 		}
 
 		return this.#histograms.get(name)!;
